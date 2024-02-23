@@ -1,25 +1,33 @@
-﻿namespace MauiMaps;
+﻿using Microsoft.Maui.Maps;
+
+namespace MauiMaps;
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
-
-	public MainPage()
+	public MainPage(MainPageViewModel viewModel)
 	{
+		BindingContext = viewModel;
 		InitializeComponent();
 	}
 
-	private void OnCounterClicked(object sender, EventArgs e)
-	{
-		count++;
+    protected override void OnAppearing()
+    {
+		var villagePin = new CustomPin()
+		{
+            Label = "Cupertino Village",
+            Location = new Location(37.33613966724056, -122.01534299825563),
+            Address = "10869 N Wolfe Rd, Cupertino, CA 95014, United States",
+            ImageSource = "pin_blue.png"
+        };
 
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
-		else
-			CounterBtn.Text = $"Clicked {count} times";
+        MyMap.Pins.Add(villagePin);
 
-		SemanticScreenReader.Announce(CounterBtn.Text);
-	}
+        Location appleLocation = new Location(37.334859987318374, -122.00972110805554);
+        MapSpan mapSpan = new MapSpan(appleLocation, 0.01, 0.01);
+        MyMap.MoveToRegion(mapSpan);
+
+        base.OnAppearing();
+    }
 }
 
 
